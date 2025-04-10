@@ -4,7 +4,7 @@
   "description": "MCP server for Hugeicons search and usage documentation",
   "type": "module",
   "bin": {
-    "hugeicons-mcp": "./build/index.js"
+    "hugeicons-mcp": "build/index.js"
   },
   "files": [
     "build",
