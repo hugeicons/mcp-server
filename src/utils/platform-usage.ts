@@ -15,7 +15,11 @@ export interface PlatformUsage {
   }[];
 }
 
-const CORE_PACKAGES = [
+// Free package that's always available
+const FREE_PACKAGE = '@hugeicons/core-free-icons';
+
+// Pro packages that require authentication via .npmrc or similar package manager config
+const PRO_PACKAGES = [
   '@hugeicons-pro/core-stroke-rounded',
   '@hugeicons-pro/core-stroke-sharp',
   '@hugeicons-pro/core-stroke-standard',
@@ -27,6 +31,13 @@ const CORE_PACKAGES = [
   '@hugeicons-pro/core-twotone-rounded'
 ];
 
+// All available packages - pro packages require authentication
+const CORE_PACKAGES = [FREE_PACKAGE, ...PRO_PACKAGES];
+
+// Note: Pro packages (@hugeicons-pro/*) require authentication via .npmrc or similar package manager config files
+// with the appropriate registry token. Without authentication, only the free package (@hugeicons/core-free-icons)
+// will be accessible.
+
 export const PLATFORM_USAGE: Record<Platform, PlatformUsage> = {
   'react': {
     platform: 'react',
@@ -35,7 +46,10 @@ export const PLATFORM_USAGE: Record<Platform, PlatformUsage> = {
       packages: CORE_PACKAGES
     },
     basicUsage: `import { HugeiconsIcon } from '@hugeicons/react'
+// Using free icons (available by default)
 import { Notification03Icon } from '@hugeicons/core-free-icons'
+// Pro icons require authentication via .npmrc or similar config
+// import { Notification03Icon } from '@hugeicons-pro/core-stroke-rounded'
 
 function App() {
     return <HugeiconsIcon icon={Notification03Icon} size={24} color="currentColor" strokeWidth={1.5} />
@@ -58,7 +72,10 @@ function App() {
     },
     basicUsage: `<script setup>
 import { HugeiconsIcon } from '@hugeicons/vue'
+// Using free icons (available by default)
 import { Notification03Icon } from '@hugeicons/core-free-icons'
+// Pro icons require authentication via .npmrc or similar config
+// import { Notification03Icon } from '@hugeicons-pro/core-stroke-rounded'
 </script>
 
 <template>
@@ -82,7 +99,10 @@ import { Notification03Icon } from '@hugeicons/core-free-icons'
     },
     basicUsage: `// your.component.ts
 import { Component } from '@angular/core'
+// Using free icons (available by default)
 import { Notification03Icon } from '@hugeicons/core-free-icons'
+// Pro icons require authentication via .npmrc or similar config
+// import { Notification03Icon } from '@hugeicons-pro/core-stroke-rounded'
 
 @Component({
     selector: 'app-example',
@@ -109,7 +129,10 @@ export class ExampleComponent {
     },
     basicUsage: `<script>
   import { HugeiconsIcon } from '@hugeicons/svelte'
+  // Using free icons (available by default)
   import { Notification03Icon } from '@hugeicons/core-free-icons'
+  // Pro icons require authentication via .npmrc or similar config
+  // import { Notification03Icon } from '@hugeicons-pro/core-stroke-rounded'
 </script>
 
 <HugeiconsIcon icon={Notification03Icon} size={24} color="currentColor" strokeWidth={1.5} />`,
@@ -130,7 +153,10 @@ export class ExampleComponent {
       packages: CORE_PACKAGES
     },
     basicUsage: `import { HugeiconsIcon } from '@hugeicons/react-native'
+// Using free icons (available by default)
 import { Notification03Icon } from '@hugeicons/core-free-icons'
+// Pro icons require authentication via .npmrc or similar config
+// import { Notification03Icon } from '@hugeicons-pro/core-stroke-rounded'
 
 export default function App() {
   return <HugeiconsIcon icon={Notification03Icon} size={24} color="#000000" strokeWidth={1.5} />

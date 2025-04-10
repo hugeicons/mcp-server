@@ -72,13 +72,13 @@ class HugeiconsServer {
         },
         {
           name: "search_icons",
-          description: "Search for icons by name or tags",
+          description: "Search for icons by name or tags. Use commas to search for multiple icons (e.g. 'home, notification, settings')",
           inputSchema: {
             type: "object",
             properties: {
               query: {
                 type: "string",
-                description: "Search query to find relevant icons",
+                description: "Search query to find relevant icons. Separate multiple searches with commas",
               }
             },
             required: ["query"],

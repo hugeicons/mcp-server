@@ -60,20 +60,29 @@ function prepareIconForSearch(icon: IconInfo): SearchableIcon {
  * Process search terms and handle special cases like hyphenated words
  */
 function processSearchTerms(search: string): string[] {
-    const normalizedSearch = search.toLowerCase().replace(/-/g, ' ');
-    const searchTerms = normalizedSearch
-        .split(' ')
-        .filter(term => term.length > 0);
+    // Split by commas first to handle multiple search terms
+    const searchParts = search.split(',').map(part => part.trim());
     
-    // Special case: if we have terms like "chart" and "up", also add "chart-up" as a search term
-    const combinedTerms = new Set(searchTerms);
-    if (searchTerms.length > 1) {
-        for (let i = 0; i < searchTerms.length - 1; i++) {
-            combinedTerms.add(`${searchTerms[i]}-${searchTerms[i+1]}`);
+    const allTerms = new Set<string>();
+    
+    for (const part of searchParts) {
+        const normalizedSearch = part.toLowerCase().replace(/-/g, ' ');
+        const searchTerms = normalizedSearch
+            .split(' ')
+            .filter(term => term.length > 0);
+        
+        // Special case: if we have terms like "chart" and "up", also add "chart-up" as a search term
+        if (searchTerms.length > 1) {
+            for (let i = 0; i < searchTerms.length - 1; i++) {
+                allTerms.add(`${searchTerms[i]}-${searchTerms[i+1]}`);
+            }
         }
+        
+        // Add all individual terms
+        searchTerms.forEach(term => allTerms.add(term));
     }
     
-    return Array.from(combinedTerms);
+    return Array.from(allTerms);
 }
 
 /**
@@ -84,6 +93,9 @@ export function searchIcons(icons: IconInfo[], searchQuery: string): IconInfo[] 
         return [];
     }
 
+    // Split search query by commas
+    const searchQueries = searchQuery.split(',').map(q => q.trim()).filter(q => q);
+    
     // Prepare icons for searching
     const searchableIcons = icons.map(prepareIconForSearch);
 
@@ -106,66 +118,83 @@ export function searchIcons(icons: IconInfo[], searchQuery: string): IconInfo[] 
         useExtendedSearch: true,
     });
 
-    const searchTerms = processSearchTerms(searchQuery);
-    
-    // Initialize results with all icons and zero scores
-    let results: SearchResult[] = searchableIcons.map(icon => ({
-        item: icon,
-        score: 0,
-    }));
+    // Store all results in a Map to deduplicate
+    const allResults = new Map<string, { item: IconInfo; score: number }>();
 
-    // Search for each term and intersect results while keeping scores
-    for (const term of searchTerms) {
-        const termResults = fuse.search(term);
-        const termScores = new Map(termResults.map(r => [(r.item as SearchableIcon).searchableText.name, r.score || 0]));
+    // Search for each comma-separated query
+    for (const query of searchQueries) {
+        const searchTerms = processSearchTerms(query);
+        
+        // Initialize results with all icons and zero scores for this query
+        let queryResults: SearchResult[] = searchableIcons.map(icon => ({
+            item: icon,
+            score: 0,
+        }));
 
-        results = results
-            .filter(r => termResults.some(tr => (tr.item as SearchableIcon).searchableText.name === r.item.searchableText.name))
-            .map(r => {
-                const nameWithSpaces = r.item.searchableText.name;
-                const nameWithoutHyphens = r.item.searchableText.name.replace(/-/g, '');
-                
-                const nameWords = r.item.searchableText.name.split(/[\s-]/);
-                
-                // Check for exact word matches (much stronger boost)
-                const exactWordMatch = 
-                    nameWords.includes(term) || 
-                    r.item.searchableText.name === term ||
-                    nameWithoutHyphens === term;
-                
-                // Check for exact matches in different name formats
-                const exactMatchInName = 
-                    r.item.searchableText.name.includes(term) || 
-                    nameWithoutHyphens.includes(term);
-                
-                // Check for exact matches in tags
-                const exactMatchInTags = r.item.searchableText.tags.includes(term);
-                
-                const baseScore = termScores.get(r.item.searchableText.name) || 0;
+        // Search for each term and intersect results while keeping scores
+        for (const term of searchTerms) {
+            const termResults = fuse.search(term);
+            const termScores = new Map(termResults.map(r => [(r.item as SearchableIcon).searchableText.name, r.score || 0]));
 
-                // Apply bonuses for exact matches (reduce score since lower is better)
-                const finalScore =
-                    baseScore *
-                    (exactWordMatch ? 0.1  // 90% score reduction for exact word match
-                        : exactMatchInName ? 0.3  // 70% score reduction for exact name match
-                        : exactMatchInTags ? 0.5  // 50% score reduction for exact tag match
-                        : 1);  // No reduction for fuzzy matches
+            queryResults = queryResults
+                .filter(r => termResults.some(tr => (tr.item as SearchableIcon).searchableText.name === r.item.searchableText.name))
+                .map(r => {
+                    const nameWithSpaces = r.item.searchableText.name;
+                    const nameWithoutHyphens = r.item.searchableText.name.replace(/-/g, '');
+                    
+                    const nameWords = r.item.searchableText.name.split(/[\s-]/);
+                    
+                    // Check for exact word matches (much stronger boost)
+                    const exactWordMatch = 
+                        nameWords.includes(term) || 
+                        r.item.searchableText.name === term ||
+                        nameWithoutHyphens === term;
+                    
+                    // Check for exact matches in different name formats
+                    const exactMatchInName = 
+                        r.item.searchableText.name.includes(term) || 
+                        nameWithoutHyphens.includes(term);
+                    
+                    // Check for exact matches in tags
+                    const exactMatchInTags = r.item.searchableText.tags.includes(term);
+                    
+                    const baseScore = termScores.get(r.item.searchableText.name) || 0;
 
-                return {
-                    item: r.item,
-                    score: r.score + finalScore,
-                };
-            });
+                    // Apply bonuses for exact matches (reduce score since lower is better)
+                    const finalScore =
+                        baseScore *
+                        (exactWordMatch ? 0.1  // 90% score reduction for exact word match
+                            : exactMatchInName ? 0.3  // 70% score reduction for exact name match
+                            : exactMatchInTags ? 0.5  // 50% score reduction for exact tag match
+                            : 1);
+
+                    return {
+                        item: r.item,
+                        score: r.score + finalScore,
+                    };
+                });
+        }
+
+        // Add results to the overall results map, keeping the best score for each icon
+        for (const result of queryResults) {
+            const existingResult = allResults.get(result.item.name);
+            if (!existingResult || result.score < existingResult.score) {
+                allResults.set(result.item.name, {
+                    item: {
+                        name: result.item.name,
+                        tags: result.item.tags,
+                        category: result.item.category,
+                        featured: result.item.featured,
+                        version: result.item.version,
+                    },
+                    score: result.score
+                });
+            }
+        }
     }
 
-    // Sort by score and return the original IconInfo objects
-    return results
+    // Convert map to array and sort by score
+    return Array.from(allResults.values())
         .sort((a, b) => a.score - b.score)
-        .map(result => ({
-            name: result.item.name,
-            tags: result.item.tags,
-            category: result.item.category,
-            featured: result.item.featured,
-            version: result.item.version,
-        }));
+        .map(result => result.item);
 } 
