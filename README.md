@@ -61,7 +61,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "filesystem": {
+    "hugeicons": {
       "command": "npx",
       "args": [
         "-y",
