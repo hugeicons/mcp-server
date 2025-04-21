@@ -2,6 +2,8 @@
 
 MCP server for Hugeicons integration and documentation
 
+[![smithery badge](https://smithery.ai/badge/@hugeicons/mcp-server)](https://smithery.ai/server/@hugeicons/mcp-server)
+
 This is a TypeScript-based MCP server that provides tools and resources for integrating Hugeicons into various platforms. It implements a Model Context Protocol (MCP) server that helps AI assistants provide accurate guidance for using Hugeicons.
 
 ## Features
@@ -52,6 +54,14 @@ npm run watch
 ```
 
 ## Installation
+
+### Installing via Smithery
+
+To install Hugeicons MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@hugeicons/mcp-server):
+
+```bash
+npx -y @smithery/cli install @hugeicons/mcp-server --client claude
+```
 
 To use with Claude Desktop, add the server config:
 
