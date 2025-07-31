@@ -92,8 +92,8 @@ class HugeiconsServer {
             properties: {
               platform: {
                 type: "string",
-                description: "Platform name (react, vue, angular, svelte, react-native, flutter)",
-                enum: ["react", "vue", "angular", "svelte", "react-native", "flutter"]
+                description: "Platform name (react, vue, angular, svelte, react-native, flutter, html)",
+                enum: ["react", "vue", "angular", "svelte", "react-native", "flutter", "html"]
               },
             },
             required: ["platform"],
@@ -162,6 +162,12 @@ class HugeiconsServer {
             name: "Flutter Usage Guide",
             mimeType: "text/markdown",
             description: "Flutter implementation guide for Hugeicons"
+          },
+          {
+            uri: "hugeicons://docs/platforms/html",
+            name: "HTML Usage Guide",
+            mimeType: "text/markdown",
+            description: "HTML implementation guide for Hugeicons (font-based)"
           },
           {
             uri: "hugeicons://icons/index",

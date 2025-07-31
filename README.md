@@ -23,6 +23,7 @@ Platform Documentation (in Markdown format):
 - `hugeicons://docs/platforms/svelte` - Svelte integration guide
 - `hugeicons://docs/platforms/react-native` - React Native integration guide
 - `hugeicons://docs/platforms/flutter` - Flutter integration guide
+- `hugeicons://docs/platforms/html` - HTML integration guide (font-based)
 
 Icons Data:
 - `hugeicons://icons/index` - Complete index of all Hugeicons (JSON format)
@@ -35,6 +36,7 @@ This server provides comprehensive Hugeicons integration support including:
 - Usage examples with code snippets
 - Component props documentation
 - Package installation instructions
+- Font-based HTML integration via CDN
 
 ## Development
 
