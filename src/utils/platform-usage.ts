@@ -1,4 +1,4 @@
-export type Platform = 'react' | 'vue' | 'angular' | 'svelte' | 'react-native' | 'flutter';
+export type Platform = 'react' | 'vue' | 'angular' | 'svelte' | 'react-native' | 'flutter' | 'html';
 
 export interface PlatformUsage {
   platform: Platform;
@@ -188,6 +188,48 @@ HugeIcon(
       { name: 'icon', type: 'HugeIcons', default: 'Required', description: 'The icon to display from HugeIcons collection' },
       { name: 'size', type: 'double', default: '24.0', description: 'Icon size in logical pixels' },
       { name: 'color', type: 'Color', default: 'Colors.black', description: 'Icon color from Flutter Colors' }
+    ]
+  },
+  'html': {
+    platform: 'html',
+    installation: {
+      core: 'CDN Link: https://use.hugeicons.com/font/icons.css',
+      packages: []
+    },
+    basicUsage: `<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hugeicons Example</title>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" />
+    </head>
+    <body>
+        <div class="icons">
+            <ul>
+                <li>
+                    <i class="hgi-stroke hgi-abacus"></i>
+                    <p>abacus</p>
+                </li>
+                <li>
+                    <i class="hgi-stroke hgi-absolute"></i>
+                    <p>absolute</p>
+                </li>
+                <li>
+                    <i class="hgi-stroke hgi-acceleration"></i>
+                    <p>acceleration</p>
+                </li>
+                <li>
+                    <i class="hgi-stroke hgi-access"></i>
+                    <p>access</p>
+                </li>
+            </ul>
+        </div>
+    </body>
+</html>`,
+    props: [
+      { name: 'class', type: 'string', default: 'hgi-stroke', description: 'Base CSS class for stroke-style icons' },
+      { name: 'icon-name', type: 'string', default: 'Required', description: 'Specific icon class name (e.g., hgi-abacus, hgi-absolute)' },
+      { name: 'style', type: 'CSS properties', description: 'Custom CSS styles for size, color, etc.' }
     ]
   }
 }; 
