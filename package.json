@@ -1,6 +1,6 @@
 {
   "name": "@hugeicons/mcp-server",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "MCP server for Hugeicons search and usage documentation",
   "type": "module",
   "bin": {
@@ -18,8 +18,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.9.0",
-    "axios": "^1.8.4",
-    "fuse.js": "^7.1.0"
+    "axios": "^1.8.4"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
@@ -30,9 +29,19 @@
     "hugeicons",
     "mcp",
     "icons",
-    "model-context-protocol"
+    "model-context-protocol",
+    "icon-search",
+    "unicode",
+    "glyphs",
+    "icon-fonts",
+    "claude",
+    "ai-tools"
   ],
   "author": "Mohamed Tawfik (https://hugeicons.com)",
   "homepage": "https://hugeicons.com",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hugeicons/mcp-server.git"
+  }
 }

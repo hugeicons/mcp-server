@@ -13,6 +13,8 @@ This is a TypeScript-based MCP server that provides tools and resources for inte
 - `list_icons` - Get a list of all available Hugeicons icons
 - `search_icons` - Search for icons by name or tags
 - `get_platform_usage` - Get platform-specific usage instructions for Hugeicons
+- `get_icon_glyphs` - Get all glyphs (unicode characters) for a specific icon across all available styles
+- `get_icon_glyph_by_style` - Get the glyph (unicode character) for a specific icon with a particular style
 
 ### Resources
 
@@ -32,6 +34,7 @@ Icons Data:
 
 This server provides comprehensive Hugeicons integration support including:
 - Icon discovery and search
+- Glyph and unicode data retrieval for font-based implementations
 - Platform-specific installation guides
 - Usage examples with code snippets
 - Component props documentation
