@@ -3,23 +3,29 @@
 FROM node:lts-alpine AS builder
 WORKDIR /app
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Install dependencies without running prepare/build
-COPY package.json package-lock.json tsconfig.json ./
-RUN npm ci --ignore-scripts
+COPY package.json pnpm-lock.yaml tsconfig.json ./
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Copy source and build
 COPY src ./src
 COPY tsconfig.json ./tsconfig.json
 COPY README.md ./README.md
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Runtime
 FROM node:lts-alpine AS runtime
 WORKDIR /app
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Install production dependencies without running prepare/build
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev --ignore-scripts
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 # Copy built files
 COPY --from=builder /app/build ./build
