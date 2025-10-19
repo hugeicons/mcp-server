@@ -1,5 +1,4 @@
 # Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
-# Using pnpm for package management
 
 startCommand:
   type: stdio
