@@ -12,7 +12,6 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Copy source and build
 COPY src ./src
-COPY tsconfig.json ./tsconfig.json
 COPY README.md ./README.md
 RUN pnpm run build
 
